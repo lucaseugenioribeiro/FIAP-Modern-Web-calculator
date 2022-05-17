@@ -6,27 +6,45 @@ const decimal = document.querySelector('#decimal');
 let newNumber = true;
 let operator;
 let previousNumber;
+let currentNumber;
 
 function updateDisplay(numero) {
-    if(newNumber) {
-        display.textContent = numero;
-        newNumber = false;
-    }
-    else display.textContent += numero;
+    display.textContent = numero;
 }
 
 const insertNumber = (event) => {
-    updateDisplay(event.target.textContent);
+    if(newNumber) {
+        currentNumber = event.target.textContent;
+        newNumber = false;
+        updateDisplay(currentNumber)
+    }
+    else {
+        currentNumber += event.target.textContent;
+        updateDisplay(currentNumber)
+    }
 }
-
-// Prototype são atributos e funções inerentes ao tipo
 
 buttons.forEach((button) => button.addEventListener('click', insertNumber));
 
 const setDecimal = (event) => {
-    const isDecimal = display.textContent.includes(event.target.textContent);
-    if(!isDecimal){
-        updateDisplay(event.target.textContent);
+    if(newNumber){
+        currentNumber = "0"+event.target.textContent;
+        newNumber = false;
+        updateDisplay(currentNumber)
+    }
+    else {
+        const isDecimal = display.textContent.includes(event.target.textContent);
+        if(!isDecimal){
+            if(newNumber) {
+                currentNumber = event.target.textContent;
+                newNumber = false;
+                updateDisplay(currentNumber)
+            }
+            else {
+                currentNumber += event.target.textContent;
+                updateDisplay(currentNumber)
+            }
+        }
     }
 }
 
@@ -44,7 +62,7 @@ const calculate = () => {
     const actualNumber = display.textContent;
     const result = eval(`${previousNumber.replace(",",".")}${operator}${actualNumber.replace(",",".")}`); //template string, utilizando craze
     newNumber = true;
-    updateDisplay(String(result).replace(".",","));
+    updateDisplay(String(result).replace(".",","))
 }
 
 const equal = document.querySelector("#igual");
