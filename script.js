@@ -1,6 +1,7 @@
 const display = document.getElementById('display');
 const buttons = document.querySelectorAll('[id*=tecla]');
 const operators = document.querySelectorAll('[id*=operador]');
+const decimal = document.querySelector('#decimal');
 
 let newNumber = true;
 let operator;
@@ -22,6 +23,15 @@ const insertNumber = (event) => {
 
 buttons.forEach((button) => button.addEventListener('click', insertNumber));
 
+const setDecimal = (event) => {
+    const isDecimal = display.textContent.includes(event.target.textContent);
+    if(!isDecimal){
+        updateDisplay(event.target.textContent);
+    }
+}
+
+decimal.addEventListener('click', setDecimal);
+
 const selectOperator = (event) => {
     newNumber = true;
     operator = event.target.textContent;
@@ -32,9 +42,9 @@ operators.forEach((operator) => operator.addEventListener('click', selectOperato
 
 const calculate = () => {
     const actualNumber = display.textContent;
-    const result = eval(`${previousNumber}${operator}${actualNumber}`); //template string, utilizando craze
+    const result = eval(`${previousNumber.replace(",",".")}${operator}${actualNumber.replace(",",".")}`); //template string, utilizando craze
     newNumber = true;
-    updateDisplay(result);
+    updateDisplay(String(result).replace(".",","));
 }
 
 const equal = document.querySelector("#igual");
